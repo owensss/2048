@@ -1,4 +1,14 @@
 # 2048
+
+#### 2048  x * y version
+	a 2048 branch that runs on rails server, with two input boxes letting users
+
+	to choose which grid to play...
+
+	just run bundle install & rails s to start it...
+
+	The Code is veili veili ugly and the behavior after integer overflow is undefined
+
 A small clone of [1024](https://play.google.com/store/apps/details?id=com.veewo.a1024), based on [Saming's 2048](http://saming.fr/p/2048/) (also a clone).
 
 Made just for fun. [Play it here!](http://gabrielecirulli.github.io/2048/)

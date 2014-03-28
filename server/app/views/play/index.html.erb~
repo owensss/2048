@@ -3,8 +3,40 @@
 <head>
   <meta charset="utf-8">
   <title>2048</title>
+  <style>
+  <% @x = @x.to_i %>
+  <% @y = @y.to_i %>
+  <% 1.upto(@x) do |xx| %>
+  	<% 1.upto(@y) do |yy| %>
+	  <% xpos = (70+15)*(xx-1) %>
+	  <% ypos = (70+15)*(yy-1) %>
+      .tile.tile-position-<%=xx%>-<%=yy%> {
+  		  -webkit-transform: translate(<%=xpos%>px, <%=ypos %>px);
+  		  -moz-transform: translate(<%=xpos%>px, <%=ypos %>px);
+  		  -ms-transform: translate(<%=xpos%>px, <%=ypos %>px);
+  		  transform: translate(<%=xpos%>px, <%=ypos %>px);
+	  }
+  	<% end %>
+  <% end %>
+  <% w=70*@x + 15 * (@x + 1) %>
+  <% h=70*@y + 15 * (@y + 1) %>
+  .game-container {
+      width: <%= w %>px;
+      height: <%= h %>px;
+  }
 
-  <link href="style/main.css" rel="stylesheet" type="text/css">
+  .container {
+      width: <%= w %>px;
+      margin: 0 auto;
+   }
+
+  </style>
+  <h1>
+  <%= @x %>
+  <br />
+  <%= @y %>
+  </h1>
+ <!--%= stylesheet_link_tag "style/main" %-->
   <link rel="shortcut icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="meta/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,6 +46,13 @@
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
 </head>
 <body>
+  <%= form_tag("/play/modify") do %>
+    <%= label_tag(:x, "x") %>
+	<%= text_field_tag(:x) %>
+	<%= label_tag(:y, "y") %>
+	<%= text_field_tag(:y) %>
+	<%= submit_tag("reshape") %>
+  <% end %>
   <div class="container">
     <div class="heading">
       <h1 class="title">2048</h1>
@@ -36,33 +75,18 @@
           <a class="retry-button">Try again</a>
         </div>
       </div>
-
-      <div class="grid-container">
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-      </div>
-
-      <div class="tile-container">
-
+	  <div class="grid-container">
+	  <% @x.times do |yy| %>
+	    <div class="grid-row">
+	    <% @y.times do |xx| %>
+	      <div class="grid-cell"></div>
+	    <% end %>
+	    </div>
+	  <% end %>
+	  </div>
+	  <div class="tile-container">
       </div>
     </div>
-
     <p class="game-explanation">
       <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles. When two tiles with the same number touch, they <strong>merge into one!</strong>
     </p>
@@ -75,16 +99,20 @@
     Created by <a href="http://gabrielecirulli.com" target="_blank">Gabriele Cirulli.</a> Based on <a href="https://itunes.apple.com/us/app/1024!/id823499224" target="_blank">1024 by Veewo Studio</a> and conceptually similar to <a href="http://asherv.com/threes/" target="_blank">Threes by Asher Vollmer.</a>
     </p>
   </div>
-
-  <script src="js/bind_polyfill.js"></script>
-  <script src="js/classlist_polyfill.js"></script>
-  <script src="js/animframe_polyfill.js"></script>
-  <script src="js/keyboard_input_manager.js"></script>
-  <script src="js/html_actuator.js"></script>
-  <script src="js/grid.js"></script>
-  <script src="js/tile.js"></script>
-  <script src="js/local_storage_manager.js"></script>
-  <script src="js/game_manager.js"></script>
-  <script src="js/application.js"></script>
+  <%= javascript_include_tag "js/bind_polyfill" %>
+  <%= javascript_include_tag "js/classlist_polyfill" %>
+  <%= javascript_include_tag "js/animframe_polyfill" %>
+  <%= javascript_include_tag "js/keyboard_input_manager" %>
+  <%= javascript_include_tag "js/html_actuator" %>
+  <%= javascript_include_tag "js/grid" %>
+  <%= javascript_include_tag "js/tile" %>
+  <%= javascript_include_tag "js/local_storage_manager" %>
+  <%= javascript_include_tag "js/game_manager" %>
+  <script>
+  	window.requestAnimationFrame(function () {
+  		var game = new GameManager(<%= @x %>, <%= @y %>, KeyboardInputManager, HTMLActuator, LocalStorageManager);
+  		game.restart();
+});
+  </script>
 </body>
 </html>

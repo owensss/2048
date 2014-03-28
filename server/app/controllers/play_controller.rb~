@@ -1,0 +1,8 @@
+class PlayController < ApplicationController
+  def index
+  	@x = params[:x]
+  	@y = params[:y]  	
+  	@x = 4 if @x.empty? == true
+  	@y = 4 if @y.empty? == true
+  end
+end
